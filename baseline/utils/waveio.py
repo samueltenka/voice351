@@ -13,7 +13,7 @@ import wave
 #stream chunk   
 chunk = 1024  
 
-data_dir = readconfig.get('DATA')
+data_dir = readconfig.get('TESTDATA')
 #open a wav format music  
 f = wave.open(data_dir + '/test.wav', "rb")  
 #instantiate PyAudio  
