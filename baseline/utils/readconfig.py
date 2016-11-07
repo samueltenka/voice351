@@ -6,7 +6,6 @@
 
 import terminal 
 import os
-print(os.listdir('.'))
 
 try:
     with open('config.json') as f:
