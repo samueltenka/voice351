@@ -10,10 +10,9 @@ import terminal
 import readconfig
 
 import pygame
-import pyaudio
 import scipy.io.wavfile as sciowav
-import wave
-import numpy 
+import matplotlib.pyplot as plt
+import numpy as np
 
 RATE = 44100
 
@@ -40,6 +39,16 @@ def write(filenm, array):
    '''
    sciowav.write(filenm, RATE, array)
 
+def show(array):
+    duration = float(len(array))/RATE
+    plt.clf() 
+    plt.plot(np.arange(0.0, duration, 1.0/RATE), array.astype('f')/2**15)
+    plt.ylabel('Pressure (speaker maxes)')
+    plt.xlabel('Frame Index (seconds)')
+    plt.gca().set_ylim(-1, 1)
+    plt.gca().set_xlim(0.0, duration)
+    plt.show()
+
 def test_waveio():
     ''' Test utils.waveio.play, .read, and .write. '''
     data_dir = readconfig.get('TESTDATA')
@@ -50,10 +59,13 @@ def test_waveio():
     X = read(filenm)
     write(copynm, X)
     Y = read(copynm)
+    show(X)
 
     print('Check equal...')
-    assert(X==Y)
+    assert(np.array_equal(X, Y))
     play(filenm)
     play(copynm)
+    print('Success!')
 
-test_waveio()
+if __name__ == '__main__':
+    test_waveio()
