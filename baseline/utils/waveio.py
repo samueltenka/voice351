@@ -40,11 +40,22 @@ def write(filenm, array):
    sciowav.write(filenm, RATE, array)
 
 def show(array):
+    ''' Pop up a matlab-style plot of pressure vs time.
+
+        Works only on stereo (i.e. Nx2 arrays); displays
+        average and difference of pressures separately.
+    '''
     duration = float(len(array))/RATE
+    time = np.arange(0.0, duration, 1.0/RATE)
+    left, right = (array[:,i].astype('f')/2**15 for i in range(2))
+
     plt.clf() 
-    plt.plot(np.arange(0.0, duration, 1.0/RATE), array.astype('f')/2**15)
+    plt.plot(time, (left+right)/2, c='g', label='avg')
+    plt.plot(time, (left-right)/2, c='r', label='diff')
+
     plt.ylabel('Pressure (speaker maxes)')
     plt.xlabel('Frame Index (seconds)')
+    plt.legend()
     plt.gca().set_ylim(-1, 1)
     plt.gca().set_xlim(0.0, duration)
     plt.show()

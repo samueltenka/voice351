@@ -7,3 +7,5 @@
 python 2.7
 pygame
 scipy
+matplotlib
+numpy
