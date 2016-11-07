@@ -28,36 +28,36 @@ def get_valleys(signal):
     ''' Return generator of strict valleys in signal. '''
     for i, (a, b, c) in enumerate(zip(signal, signal[1:], signal[2:])):
         if (b<a) and (b<c):
-            print(a, b, c)
             yield i 
+
+def segment(signal):
+    ''' Return generator of segment boundaries. '''
+    Y = get_mag(signal)
+    Y = np.sqrt(get_smooth(np.square(Y), utils.waveio.RATE//100))
+    Ysmooth = np.sqrt(get_smooth(np.square(Y), utils.waveio.RATE//1)) * 0.1
+    Y = np.maximum(Y, Ysmooth)
+    Y = get_smooth(Y, utils.waveio.RATE//100)
+
+    yield 0.0
+    for v in get_valleys(Y[:,0]):
+        yield float(v)/utils.waveio.RATE
+    yield float(len(signal))/utils.waveio.RATE
 
 def test_convo():
     ''' Test convo.get_smooth, .get_valleys '''
     filenm = utils.readconfig.get('TESTDATA') + '/noah.wav'
     convnm = utils.readconfig.get('TESTDATA') + '/noah_conv.wav'
     X = utils.waveio.read(filenm)
-    X = get_mag(X)
-    utils.waveio.plot(X)
-    
-    Y = X
-    Y = np.sqrt(get_smooth(np.square(X), 44100//100))
-    Y2 = np.sqrt(get_smooth(np.square(Y), 44100//1)) * 0.1
-    utils.waveio.plot(Y2)
-    Y = np.maximum(Y, Y2)
-    Y = get_smooth(Y, 44100//100)
-    #Y = np.square(get_smooth(np.sqrt(Y), 44100//100))
-    #Y = get_smooth(Y, 44100//100)
-    
-    utils.waveio.plot(Y, alsoshow=False)
-    for v in get_valleys(Y[:,0]):
-        t = float(v)/44100
-        plt.plot([t, t], [-1.0, +1.0])
+
+    utils.waveio.plot(X, alsoshow=False)
+    for t in segment(X):
+        plt.plot([t, t], [-1.0, +1.0], c='b')
     plt.show(block=False)
     
-    utils.waveio.write(convnm, Y)
-    utils.waveio.play(filenm)
-    utils.waveio.play(convnm)
-    plt.show()
+    command = 'play'
+    while command:
+        utils.waveio.play(filenm)
+        command = raw_input('enter to exit; key to replay')
 
 if __name__ == '__main__':
     test_convo()
