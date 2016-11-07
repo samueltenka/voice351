@@ -9,9 +9,9 @@ import numpy as np
 import scipy.signal as scisig
 import matplotlib.pyplot as plt
 
-def get_mag2(signal):
+def get_mag(signal):
     s = signal.astype('f')
-    r = (np.multiply(s[:,0], s[:,0]) +  np.multiply(s[:,1], s[:,1]))/2
+    r = np.sqrt((np.square(s[:,0]) + np.square(s[:,1])) / 2)
     return np.swapaxes(np.array([r, r]), 0, 1)
 
 def get_smooth(signal, sigma):
@@ -36,19 +36,28 @@ def test_convo():
     filenm = utils.readconfig.get('TESTDATA') + '/noah.wav'
     convnm = utils.readconfig.get('TESTDATA') + '/noah_conv.wav'
     X = utils.waveio.read(filenm)
-    X = np.exp(get_mag2(X)/2**30 - 1.0) * 2**15 
-    print(np.max(X))
+    X = get_mag(X)
     utils.waveio.plot(X)
-    Y = np.log(get_smooth(X, 44100//100) / 2**15) * 2**15
+    
+    Y = X
+    Y = np.sqrt(get_smooth(np.square(X), 44100//100))
+    Y2 = np.sqrt(get_smooth(np.square(Y), 44100//1)) * 0.1
+    utils.waveio.plot(Y2)
+    Y = np.maximum(Y, Y2)
     Y = get_smooth(Y, 44100//100)
+    #Y = np.square(get_smooth(np.sqrt(Y), 44100//100))
+    #Y = get_smooth(Y, 44100//100)
+    
     utils.waveio.plot(Y, alsoshow=False)
     for v in get_valleys(Y[:,0]):
         t = float(v)/44100
         plt.plot([t, t], [-1.0, +1.0])
     plt.show(block=False)
+    
     utils.waveio.write(convnm, Y)
     utils.waveio.play(filenm)
     utils.waveio.play(convnm)
+    plt.show()
 
 if __name__ == '__main__':
     test_convo()
