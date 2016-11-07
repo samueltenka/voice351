@@ -1,5 +1,5 @@
 ''' author: sam tenka
-    date:
+    date: 2016-11-07
     descr: 1d convolution for audio processing.
 '''
 
@@ -21,7 +21,7 @@ def get_smooth(signal, sigma):
     '''
     sigma*= utils.waveio.RATE
     gauss = np.arange(-6*sigma, +6*sigma) 
-    gauss = np.exp(-np.multiply(gauss, gauss) / (2*sigma**2))
+    gauss = np.exp(-np.square(gauss, gauss) / (2*sigma**2))
     gauss/= np.sum(gauss)
     convo = [scisig.fftconvolve(signal[:,i], gauss) for i in range(2)]
     convo = np.swapaxes(np.array(convo), 0, 1)
