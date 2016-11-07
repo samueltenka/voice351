@@ -11,9 +11,11 @@ import readconfig
 
 import pygame
 import pyaudio
+import scipy.io.wavfile as sciowav
 import wave
 import numpy 
 
+RATE = 44100
 def play(filenm):
     ''' Play a specified wave file.
     '''
@@ -25,15 +27,20 @@ def play(filenm):
         clock.tick(60)
     pygame.quit()
     
-def read():
+def read(filenm):
    ''' Read wav to numpy array '''
-   pass # TODO
-def write():
+   rate, data = sciowav.read(filenm)
+   assert(rate==RATE)
+   return data
+def write(filenm):
    ''' Write wav from numpy array '''
    pass # TODO
 
 def test_waveio():
     data_dir = readconfig.get('TESTDATA')
-    play(data_dir + '/test.wav')
+    filenm = data_dir + '/test.wav'
+    play(filenm)
+    read(filenm)
+    #write(filenm)
 
 test_waveio()
