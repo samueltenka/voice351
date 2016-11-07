@@ -10,6 +10,7 @@ import readconfig
 
 import pyaudio
 import wave
+import numpy 
 
 def play(filenm):
     ''' Play a specified wave file.
@@ -29,5 +30,15 @@ def play(filenm):
     stream.close()  
     p.terminate()  
 
-data_dir = readconfig.get('TESTDATA')
-play(data_dir + '/test.wav')
+def read():
+   ''' Read wav to numpy array '''
+   pass # TODO
+def write():
+   ''' Write wav from numpy array '''
+   pass # TODO
+
+def test_waveio():
+    data_dir = readconfig.get('TESTDATA')
+    play(data_dir + '/test.wav')
+
+test_waveio()
