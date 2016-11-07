@@ -37,9 +37,11 @@ def read(filenm):
 def write(filenm, array):
    ''' Write wav from numpy array
    '''
-   sciowav.write(filenm, RATE, array)
+   sciowav.write(filenm, RATE, array.astype(np.int16))
 
-def show(array):
+def show():
+    plt.show()
+def plot(array, alsoshow=True):
     ''' Pop up a matlab-style plot of pressure vs time.
 
         Works only on stereo (i.e. Nx2 arrays); displays
@@ -58,7 +60,7 @@ def show(array):
     plt.legend()
     plt.gca().set_ylim(-1, 1)
     plt.gca().set_xlim(0.0, duration)
-    plt.show()
+    if alsoshow: show()
 
 def test_waveio():
     ''' Test utils.waveio.play, .read, and .write. '''
@@ -70,7 +72,7 @@ def test_waveio():
     X = read(filenm)
     write(copynm, X)
     Y = read(copynm)
-    show(X)
+    plot(X)
 
     print('Check equal...')
     assert(np.array_equal(X, Y))
