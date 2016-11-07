@@ -5,6 +5,5 @@
 # 0. Dependencies
 
 python 2.7
-pyaudio
-wave
 pygame
+scipy

@@ -16,6 +16,7 @@ import wave
 import numpy 
 
 RATE = 44100
+
 def play(filenm):
     ''' Play a specified wave file.
     '''
@@ -28,19 +29,31 @@ def play(filenm):
     pygame.quit()
     
 def read(filenm):
-   ''' Read wav to numpy array '''
+   ''' Read wav to numpy array
+   '''
    rate, data = sciowav.read(filenm)
    assert(rate==RATE)
    return data
-def write(filenm):
-   ''' Write wav from numpy array '''
-   pass # TODO
+
+def write(filenm, array):
+   ''' Write wav from numpy array
+   '''
+   sciowav.write(filenm, RATE, array)
 
 def test_waveio():
+    ''' Test utils.waveio.play, .read, and .write. '''
     data_dir = readconfig.get('TESTDATA')
-    filenm = data_dir + '/test.wav'
+    filenm = data_dir + '/noah.wav'
+    copynm = data_dir + '/noah_copy.wav'
+
+    print('Copy test file...') 
+    X = read(filenm)
+    write(copynm, X)
+    Y = read(copynm)
+
+    print('Check equal...')
+    assert(X==Y)
     play(filenm)
-    read(filenm)
-    #write(filenm)
+    play(copynm)
 
 test_waveio()
