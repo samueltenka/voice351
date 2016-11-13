@@ -41,15 +41,17 @@ def write(filenm, array):
 
 def show():
     plt.show()
-def plot(array, alsoshow=True):
+def plot(array, alsoshow=True, maxpts=1000):
     ''' Pop up a matlab-style plot of pressure vs time.
 
         Works only on stereo (i.e. Nx2 arrays); displays
         average and difference of pressures separately.
+        Displays at most `maxpts` plot points, by sampling.
     '''
     duration = float(len(array))/RATE
-    time = np.arange(0.0, duration, 1.0/RATE)
-    left, right = (array[:,i].astype('f')/2**15 for i in range(2))
+    step = max(1, len(array)//maxpts) 
+    time = np.arange(0.0, duration, float(step)/RATE)
+    left, right = (array[::step,i].astype('f')/2**15 for i in range(2))
 
     plt.clf() 
     plt.plot(time, (left+right)/2, c='g', label='avg')

@@ -2,4 +2,7 @@
     "ABOUT": "I am a config file for the Voice Translation Baseline.",
     "DATA": "../../data",
     "TESTDATA": "./testdata",
+    "_TESTIN": "./testdata/noah.wav",
+    "TESTIN": "./testdata/Sam_standard_sulliedflesh_3_B.wav",
+    "TESTOUT": "./testdata/out.wav",
 }

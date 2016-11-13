@@ -41,10 +41,15 @@ def get_valleys(signal):
 
 def segment(signal, sigmaA=0.01, sigmaB=0.01):
     ''' Return generator of segment boundaries. '''
+    raw_input('A!')
     Y = get_mag(signal)
+    raw_input('B!')
     Y = np.sqrt(get_smooth(np.square(Y), sigmaA))
+    raw_input('C!')
     Y = smooth_silence(Y)
+    raw_input('D!')
     Y = get_smooth(Y, sigmaB)
+    raw_input('E!')
 
     yield 0.0
     for v in get_valleys(Y[:,0]):
@@ -53,8 +58,8 @@ def segment(signal, sigmaA=0.01, sigmaB=0.01):
 
 def test_convo():
     ''' Test convo.segment, and hence also .get_valleys, .get_smooth, .get_mag. '''
-    filenm = utils.readconfig.get('TESTDATA') + '/noah.wav'
-    convnm = utils.readconfig.get('TESTDATA') + '/noah_conv.wav'
+    filenm = utils.readconfig.get('TESTIN')
+    convnm = utils.readconfig.get('TESTOUT')
     X = utils.waveio.read(filenm)
 
     # 0. Plot test signal with vertical bars demarcating computed segments.
