@@ -41,7 +41,7 @@ def write(filenm, array):
 
 def show():
     plt.show()
-def plot(array, alsoshow=True, maxpts=1000):
+def plot(array, alsoshow=True, maxpts=10000):
     ''' Pop up a matlab-style plot of pressure vs time.
 
         Works only on stereo (i.e. Nx2 arrays); displays

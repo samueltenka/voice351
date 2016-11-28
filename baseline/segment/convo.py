@@ -39,17 +39,12 @@ def get_valleys(signal):
         if (b<a) and (b<c):
             yield i 
 
-def segment(signal, sigmaA=0.01, sigmaB=0.01):
+def segment(signal, sigmaA=0.005, sigmaB=0.005):
     ''' Return generator of segment boundaries. '''
-    raw_input('A!')
     Y = get_mag(signal)
-    raw_input('B!')
     Y = np.sqrt(get_smooth(np.square(Y), sigmaA))
-    raw_input('C!')
     Y = smooth_silence(Y)
-    raw_input('D!')
     Y = get_smooth(Y, sigmaB)
-    raw_input('E!')
 
     yield 0.0
     for v in get_valleys(Y[:,0]):
