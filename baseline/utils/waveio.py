@@ -31,6 +31,7 @@ def read(filenm):
    ''' Read wav to numpy array
    '''
    rate, data = sciowav.read(filenm)
+   #RATE = rate # TODO: pair RATE value with data, instead of using a global
    assert(rate==RATE)
    return data
 
