@@ -19,7 +19,7 @@ def get_smooth(signal, sigma):
 
         `sigma` has units of seconds, and sets the smoothing timescale.
     '''
-    sigma*= utils.waveio.RATE
+    sigma*= utils.waveio.rate
     gauss = np.arange(-6*sigma, +6*sigma) 
     gauss = np.exp(-np.square(gauss, gauss) / (2*sigma**2))
     gauss/= np.sum(gauss)
