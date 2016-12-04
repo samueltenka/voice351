@@ -4,61 +4,69 @@
 '''
 
 import utils.readconfig
-import utils.waveio
+from utils.waveio import Audio
 import numpy as np
 import scipy.signal as scisig
 import matplotlib.pyplot as plt
 
-def get_mag(signal):
+def get_mag(audio):
+    '''  '''
+    rate, signal = audio.rate, audio.data
     s = signal.astype('f')
-    r = np.sqrt((np.square(s[:,0]) + np.square(s[:,1])) / 2)
-    return np.swapaxes(np.array([r, r]), 0, 1)
+    r = np.abs(s)
+    return Audio(rate=rate, data=r)
 
-def get_smooth(signal, sigma):
+def get_smooth(audio, sigma):
     ''' Return low-pass filtered array.
 
         `sigma` has units of seconds, and sets the smoothing timescale.
     '''
-    sigma*= utils.waveio.RATE
+    signal= audio.data
+    sigma*= audio.rate
     gauss = np.arange(-6*sigma, +6*sigma) 
     gauss = np.exp(-np.square(gauss, gauss) / (2*sigma**2))
     gauss/= np.sum(gauss)
-    convo = [scisig.fftconvolve(signal[:,i], gauss) for i in range(2)]
-    convo = np.swapaxes(np.array(convo), 0, 1)
+    convo = scisig.fftconvolve(signal, gauss)
     convo = convo[len(gauss)//2:][:len(signal)]
-    return convo
+    return Audio(rate=audio.rate, data=convo)
 
-def smooth_silence(signal, sigma=1.0, scale=0.1):
+def smooth_silence(audio, sigma=1.0, scale=0.1):
     ''' Return signal whose quietest parts have been smoothed. '''
-    smoothed = np.sqrt(get_smooth(np.square(signal), sigma))
-    return np.maximum(signal, scale * smoothed)
+    signal = audio.data
+    smoothed = np.sqrt(get_smooth(Audio(rate=audio.rate, data=np.square(signal)), sigma).data)
+    return Audio(rate=audio.rate, data = np.maximum(signal, scale * smoothed))
 
-def get_valleys(signal):
-    ''' Return generator of strict valleys in signal. '''
+def get_valleys(audio):
+    ''' Return generator of strict valleys in signal.
+
+        Todo: optimize by using relu / minus / product
+    '''
+    signal = audio.data
     for i, (a, b, c) in enumerate(zip(signal, signal[1:], signal[2:])):
         if (b<a) and (b<c):
             yield i 
 
-def segment(signal, sigmaA=0.005, sigmaB=0.005):
+def segment(audio, sigmaA=0.005, sigmaB=0.005):
     ''' Return generator of segment boundaries. '''
-    Y = get_mag(signal)
-    Y = np.sqrt(get_smooth(np.square(Y), sigmaA))
+    signal = audio.data
+    Y = get_mag(audio)
+    Y = Audio(rate=Y.rate, data=np.sqrt(get_smooth(Audio(data=np.square(Y.data), rate=Y.rate), sigmaA).data))
     Y = smooth_silence(Y)
     Y = get_smooth(Y, sigmaB)
 
     yield 0.0
-    for v in get_valleys(Y[:,0]):
-        yield float(v)/utils.waveio.RATE
-    yield float(len(signal))/utils.waveio.RATE
+    for v in get_valleys(Y):
+        yield float(v)/audio.rate
+    yield float(len(signal))/audio.rate
 
 def test_convo():
     ''' Test convo.segment, and hence also .get_valleys, .get_smooth, .get_mag. '''
     filenm = utils.readconfig.get('TESTIN')
     convnm = utils.readconfig.get('TESTOUT')
-    X = utils.waveio.read(filenm)
+    X = Audio(filenm)
 
     # 0. Plot test signal with vertical bars demarcating computed segments.
-    utils.waveio.plot(X, alsoshow=False)
+    X.plot(alsoshow=False)
     for t in segment(X):
         plt.plot([t, t], [-1.0, +1.0], c='b')
     plt.show(block=False)
@@ -66,7 +74,7 @@ def test_convo():
     # 1. (Prompt to) play sound until user presses enter.
     command = 'play'
     while command:
-        utils.waveio.play(filenm)
+        X.play()
         command = raw_input('enter to exit; key to replay')
 
 if __name__ == '__main__':
