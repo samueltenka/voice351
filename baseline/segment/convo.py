@@ -30,7 +30,7 @@ def get_smooth(audio, sigma):
     convo = convo[len(gauss)//2:][:len(signal)]
     return Audio(rate=audio.rate, data=convo)
 
-def smooth_silence(audio, sigma=1.0, scale=0.1):
+def smooth_silence(audio, sigma=.5, scale=.5):
     ''' Return signal whose quietest parts have been smoothed. '''
     signal = audio.data
     smoothed = np.sqrt(get_smooth(Audio(rate=audio.rate, data=np.square(signal)), sigma).data)
@@ -46,19 +46,25 @@ def get_valleys(audio):
         if (b<a) and (b<c):
             yield i 
 
-def segment(audio, sigmaA=0.005, sigmaB=0.005):
+def get_smoother(audio, sigmaA=0.015, sigmaB=0.015):
     ''' Return generator of segment boundaries. '''
     signal = audio.data
     Y = get_mag(audio)
     Y = Audio(rate=Y.rate, data=np.sqrt(get_smooth(Audio(data=np.square(Y.data), rate=Y.rate), sigmaA).data))
     Y = smooth_silence(Y)
     Y = get_smooth(Y, sigmaB)
+    return Y
 
+def yield_segments(audio):
     yield 0.0
-    for v in get_valleys(Y):
+    for v in get_valleys(audio):
         yield float(v)/audio.rate
-    yield float(len(signal))/audio.rate
-
+    yield float(len(audio.data))/audio.rate
+    
+def segmentation_algo(audio):
+    Y = get_smoother(audio)
+    return list(yield_segments(Y))
+    
 def test_convo():
     ''' Test convo.segment, and hence also .get_valleys, .get_smooth, .get_mag. '''
     filenm = utils.readconfig.get('TESTIN')
@@ -67,15 +73,20 @@ def test_convo():
 
     # 0. Plot test signal with vertical bars demarcating computed segments.
     X.plot(alsoshow=False)
-    for t in segment(X):
+    Y = get_smoother(X)
+    #Y.plot(alsoshow=False)
+    for t in yield_segments(Y):
         plt.plot([t, t], [-1.0, +1.0], c='b')
     plt.show(block=False)
     
     # 1. (Prompt to) play sound until user presses enter.
     command = 'play'
     while command:
-        X.play()
+        #X.play()
         command = raw_input('enter to exit; key to replay')
+        
+
+    
 
 if __name__ == '__main__':
     test_convo()

@@ -9,7 +9,7 @@
 import terminal
 import readconfig
 
-import pygame
+# import pygame
 import scipy.io.wavfile as sciowav
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,25 +26,26 @@ class Audio:
         ''' Read from a .wav; if stereo, select only left channel. 
         '''
         self.rate, self.data = sciowav.read(filenm)
+        sec1to2 = self.data[32.2*44100 : 32.6*44100]
         rank = len(self.data.shape)
         if 2 <= rank:
             assert(rank==2 and self.data.shape[1]==2)
             print('Stereo detected. Converting to mono...')
             self.data = self.data[:,0]
     
-    def play(self):
-        '''
-        '''
-        pygame.init()
-        pygame.mixer.init(frequency=self.rate, channels=2)
-        stereo = np.transpose(np.array([self.data]*2), (1, 0))
-        sound = pygame.sndarray.make_sound(stereo)
-        #sound = pygame.mixer.Sound(filenm)
-        sound.play()
-        clock = pygame.time.Clock()
-        while pygame.mixer.get_busy():
-            clock.tick(60)
-        pygame.quit()
+    # def play(self):
+    #     '''
+    #     '''
+    #     pygame.init()
+    #     pygame.mixer.init(frequency=self.rate, channels=2)
+    #     stereo = np.transpose(np.array([self.data]*2), (1, 0))
+    #     sound = pygame.sndarray.make_sound(stereo)
+    #     #sound = pygame.mixer.Sound(filenm)
+    #     sound.play()
+    #     clock = pygame.time.Clock()
+    #     while pygame.mixer.get_busy():
+    #         clock.tick(60)
+    #     pygame.quit()
 
     def write(self, filenm):
         ''' Write to .wav 
@@ -96,8 +97,8 @@ def test_waveio():
 
     print('Check equal...')
     assert(np.array_equal(X.data, Y.data))
-    X.play()
-    Y.play()
+    #X.play()
+    #Y.play()
     print('Success!')
 
 if __name__ == '__main__':
