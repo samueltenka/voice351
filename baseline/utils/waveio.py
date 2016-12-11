@@ -1,4 +1,5 @@
 ''' author: sam tenka
+    convo = np.swapaxes(np.array(convo), 0, 1)
     credits: http://stackoverflow.com/questions/17657103/how-to-play-wav-file-in-python
              http://stackoverflow.com/questions/6951046/pyaudio-help-play-a-file
              http://code.activestate.com/recipes/521884-play-sound-files-with-pygame-in-a-cross-platform-m/

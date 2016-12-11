@@ -67,6 +67,7 @@ def test_convo():
 
     # 0. Plot test signal with vertical bars demarcating computed segments.
     X.plot(alsoshow=False)
+    print(list(segment(X)))
     for t in segment(X):
         plt.plot([t, t], [-1.0, +1.0], c='b')
     plt.show(block=False)
