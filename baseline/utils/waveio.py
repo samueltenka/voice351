@@ -9,61 +9,78 @@
 import terminal
 import readconfig
 
-import pygame
+# import pygame
 import scipy.io.wavfile as sciowav
 import matplotlib.pyplot as plt
 import numpy as np
 
-RATE = 44100
+class Audio:
+    def __init__(self, filenm=None, rate=44100, data=None):
+        if filenm is not None:
+            self.read(filenm)
+        else:
+            self.rate = rate
+            self.data = data
 
-def play(filenm):
-    ''' Play a specified wave file.
-    '''
-    pygame.init()
-    sound = pygame.mixer.Sound(filenm)
-    sound.play()
-    clock = pygame.time.Clock()
-    while pygame.mixer.get_busy():
-        clock.tick(60)
-    pygame.quit()
+    def read(self, filenm):
+        ''' Read from a .wav; if stereo, select only left channel. 
+        '''
+        self.rate, self.data = sciowav.read(filenm)
+        sec1to2 = self.data[32.2*44100 : 32.6*44100]
+        rank = len(self.data.shape)
+        if 2 <= rank:
+            assert(rank==2 and self.data.shape[1]==2)
+            print('Stereo detected. Converting to mono...')
+            self.data = self.data[:,0]
     
-def read(filenm):
-   ''' Read wav to numpy array
-   '''
-   rate, data = sciowav.read(filenm)
-   #RATE = rate # TODO: pair RATE value with data, instead of using a global
-   assert(rate==RATE)
-   return data
+    # def play(self):
+    #     '''
+    #     '''
+    #     pygame.init()
+    #     pygame.mixer.init(frequency=self.rate, channels=2)
+    #     stereo = np.transpose(np.array([self.data]*2), (1, 0))
+    #     sound = pygame.sndarray.make_sound(stereo)
+    #     #sound = pygame.mixer.Sound(filenm)
+    #     sound.play()
+    #     clock = pygame.time.Clock()
+    #     while pygame.mixer.get_busy():
+    #         clock.tick(60)
+    #     pygame.quit()
 
-def write(filenm, array):
-   ''' Write wav from numpy array
-   '''
-   sciowav.write(filenm, RATE, array.astype(np.int16))
+    def write(self, filenm):
+        ''' Write to .wav 
+        '''
+        sciowav.write(filenm, self.rate, self.data.astype(np.int16))
 
-def show():
-    plt.show()
-def plot(array, alsoshow=True, maxpts=10000):
-    ''' Pop up a matlab-style plot of pressure vs time.
+    def show(self):
+        plt.show()
 
-        Works only on stereo (i.e. Nx2 arrays); displays
-        average and difference of pressures separately.
-        Displays at most `maxpts` plot points, by sampling.
-    '''
-    duration = float(len(array))/RATE
-    step = max(1, len(array)//maxpts) 
-    time = np.arange(0.0, duration, float(step)/RATE)
-    left, right = (array[::step,i].astype('f')/2**15 for i in range(2))
+    def duration(self):
+        ''' Return duration in seconds '''
+        return len(self.data)/self.rate
 
-    plt.clf() 
-    plt.plot(time, (left+right)/2, c='g', label='avg')
-    plt.plot(time, (left-right)/2, c='r', label='diff')
+    def plot(self, alsoshow=True, maxpts=10000):
+        ''' Pop up a matlab-style plot of pressure vs time.
 
-    plt.ylabel('Pressure (speaker maxes)')
-    plt.xlabel('Frame Index (seconds)')
-    plt.legend()
-    plt.gca().set_ylim(-1, 1)
-    plt.gca().set_xlim(0.0, duration)
-    if alsoshow: show()
+            Works only on stereo (i.e. Nx2 arrays); displays
+            average and difference of pressures separately.
+            Displays at most `maxpts` plot points, by sampling.
+        '''
+        step = max(1, len(self.data)//maxpts) 
+        indices = np.arange(0, len(self.data), step)
+        time = indices.astype(float) / self.rate
+        sampnorm = self.data[indices].astype('f')/2**15
+        print(time.shape, sampnorm.shape)
+    
+        plt.clf() 
+        plt.plot(time, sampnorm, c='g', label='signal')
+    
+        plt.ylabel('Pressure (speaker maxes)')
+        plt.xlabel('Frame Index (seconds)')
+        plt.legend()
+        plt.gca().set_ylim(-1, 1)
+        plt.gca().set_xlim(0.0, self.duration())
+        if alsoshow: self.show()
 
 def test_waveio():
     ''' Test utils.waveio.play, .read, and .write. '''
@@ -72,15 +89,16 @@ def test_waveio():
     copynm = data_dir + '/noah_copy.wav'
 
     print('Copy test file...') 
-    X = read(filenm)
-    write(copynm, X)
-    Y = read(copynm)
-    plot(X)
+    X = Audio(filenm)
+    X.write(copynm)
+    Y = Audio(copynm)
+    X.plot()
+    X.show()
 
     print('Check equal...')
-    assert(np.array_equal(X, Y))
-    play(filenm)
-    play(copynm)
+    assert(np.array_equal(X.data, Y.data))
+    #X.play()
+    #Y.play()
     print('Success!')
 
 if __name__ == '__main__':
