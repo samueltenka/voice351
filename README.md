@@ -3,17 +3,36 @@
     date: 2016-12-12
     descr: voice morphing system
 
-# voice351 Project: Demos
+# voice351 Project
+
+## Creative Work
+
+We had fun inventing many potential solutions to many problems
+we encountered along the way. These include:
+    
+    Audio compression via MFCC & SVD, & Inverse MFCC (see `baseline/cepstral&inv_v1/`)
+    Segmentation Metric (see `baseline/seg/`)
+    Segmentation Algorithm via Pre-Convolution (see `baseline/segment/`)
+    Dictionary-Conditioned Concatenation, with Cepstral Smoothing (see ``)
+
+We also implemented several techniques of relevance to this novel
+application, including:
+
+    Recurrent Phonetic Classifier (see `baseline/transcribe`)
+    Generative Adversarial Networks (see `gan/`)
+
+## Demos
 
 Our codebase is messy and fragmented. One challenge we encountered lied
 in coordinating several members inexperienced with programming. Ultimately,
-we were able to use git, to separate data such as hardcoded paths from code,
-and to begin merging our programs together. However, this work remains unfinished. 
-Many apologies for the catastrophe that is our software organization.
+we were able to use git, to separate data such as hardcoded paths or large
+files from code, and to begin linking our programs together. However,
+this work remains unfinished. Many apologies for the catastrophe that is
+our software organization.
 
 Most of our work lies under `baseline/`.
 
-## Phonetic Classifier
+### Phonetic Classifier
 
 For instance, to train our phonetic classifier (accuracy ~30% on the very
 challenging Buckeyes corpus, up from ~10% earlier today), one should:
@@ -27,14 +46,14 @@ Our experiments with cepstral embedding, segmentation scoring, and audio concate
 
 Two demos that, barring packages to be installed, are available immediately include: 
 
-## Audio Segmentation via Convolutional Pre-Processing:
+### Audio Segmentation via Convolutional Pre-Processing:
 
     cd into `baseline`
     run `python -m segment.convo`
 
 A plot of segmented audio should appear.
 
-## Adversarial Sampling of MNIST images 
+### Adversarial Sampling of MNIST images 
 
     cd into `gan`
     view `gan_out.png` to see what output looks like after ~5 hours of training.
