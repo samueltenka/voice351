@@ -10,25 +10,46 @@
 We had fun inventing many potential solutions to many problems
 we encountered along the way. These include:
     
-    Audio compression via MFCC & SVD, & Inverse MFCC (see `baseline/cepstral&inv_v1/`)
+    Audio compression via Cepstral Transform & SVD (see `baseline/cepstral&inv_v1/`)
     Segmentation Metric (see `baseline/seg/`)
     Segmentation Algorithm via Pre-Convolution (see `baseline/segment/`)
-    Dictionary-Conditioned Concatenation, with Cepstral Smoothing (see ``)
+    Dictionary-Conditioned Concatenation, with Cepstral Smoothing (see `baseline/encode/`)
 
 We also implemented several techniques of relevance to this novel
 application, including:
 
-    Recurrent Phonetic Classifier (see `baseline/transcribe`)
+    Recurrent Phonetic Classifier (see `baseline/transcribe/`)
     Generative Adversarial Networks (see `gan/`)
+
+Each of the above methods we tuned by hand or metric. For instance,
+for the Cepstral smoothing, we binary searched coefficients for our
+exponential moving average, validating by ear, until it became clear
+that smoothing did not enhance our current results. Many other features
+we tested and rejected in this way (another example is the use of Mel
+Features rather than plain MFCC for our audio compression --- ultimately,
+we use just Cepstra for this part of our project). So we designed our
+global architecture iteratively.
+
+More local choices we also tuned, often via a metric we designed. For
+instance, our Segmenter has 4 parameters, and we optimized these (by
+hand) to maximize our 'energy' metric. As another example, for each
+neural phonetic classifier, we tuned (by hand) learning rate, the number
+of cepstral coefficients used, and audio window size. 
+
+Ultimately, we have several algorithms that outperform naive baselines
+for each of the steps in our original Voice Morphing architecture. We
+leave the task of composing together those pieces for future work.
 
 ## Demos
 
 Our codebase is messy and fragmented. One challenge we encountered lied
-in coordinating several members inexperienced with programming. Ultimately,
-we were able to use git, to separate data such as hardcoded paths or large
-files from code, and to begin linking our programs together. However,
-this work remains unfinished. Many apologies for the catastrophe that is
-our software organization.
+in coordinating several members none of whom is a Computer Scientist
+(our team is a wonderfully interdisciplinary mix: Linguistics, Electrical
+Engineering, Computer Engineering, and Mathematics). Ultimately, we were
+able to use git, to separate data such as hardcoded paths or large files
+from code, and to begin linking our programs together. However, this work
+remains unfinished. Many apologies for the catastrophe that is our software
+organization.
 
 Most of our work lies under `baseline/`.
 
