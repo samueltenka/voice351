@@ -1,6 +1,6 @@
 body {
     font-family: calibri;
-    background-color: #123;
+    background-color: #080808;
     text-align: center;
     padding: 20px 10px;
     margin:0;
@@ -19,11 +19,11 @@ p{
 }
 
 a{
-	color: #ffd;
+	color: #fff;
 }
 
 #content {
-	font-family: times new roman;
+	font-family: calibri;
 	width: 1000px;
 	text-align: left;
 	margin: 0 auto;
@@ -34,10 +34,11 @@ a{
 }
 
 #header {
-	background-color: #234;
-	color: #fff;
+	width: 800px;
+	margin-left: 100px;
+	background-color: #080808;
+	color: #9ae6d7;
 }
-
 
 #sidebar1 {
 	font-family: times new roman;
@@ -45,14 +46,18 @@ a{
 	float: left;
 	font-size: 95%;
 	line-height: 1.5em;
-	color: #9ba;
+	color: #7d7d7d;
 }
 
 #main {
 	font-size: 18px;
 	margin-left: 220px;
 	width: 560px;
-	background-color: #10253A;
+	background-color: #0c0c0c;
+	color: #fff;
+}
+
+#footer {
 	color: #fff;
 }
 
@@ -62,9 +67,53 @@ a{
 	float: right;
 	font-size: 95%;
 	line-height: 1.5em;
-	color: #9ba;
+	color: #7d7d7d;
 }
 
 .box {
-	color: #798;
+	color: #fff;
+}
+
+.box-2 {
+	color: #fff
+}
+
+#boxInMain {
+	width: 500px;
+	margin-left: 30px;
+	background-color: #444;
+	color: #fff;
+}
+
+.topbody{
+    width:900px;
+    margin: 0 auto;
+}
+.topbar{
+    width:100%;
+    display: inline-block;
+}
+
+.topbar li{
+    float:left;
+}
+.toplist{
+    display: inline-block;
+    list-style-type:none;
+}
+.toplist a{
+    color:#FFF;
+    text-decoration: none;
+}
+.title,.toplist a{
+    display:block;
+    float: left;
+}
+.toplist a{
+    padding:15px 20px 15px 20px;
+}
+.title{
+    color:#FFF;
+    text-decoration: none;
+    padding:15px 30px 15px 30px;
 }

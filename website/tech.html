@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>EECS351 Voice Translator</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="hstyle.css" />
+
+     <style type="text/css">
+    .collapseblock {display:none}
+    .expandblock {display:inline}
+    </style>
+
+    <script type="text/Javascript"> 
+    function toggleblocks (postid) {
+        var whichpost = document.getElementById(postid);
+        if (whichpost.className=="expandblock") {
+            whichpost.className="collapseblock";
+        } else {
+            whichpost.className="expandblock";
+        }
+    }
+    </script>
+
+
+
+  <!--above header-->
+</head>
+
+<body>
+
+<div class="topbar">
+    <div class="topbody">
+    <a class="title" href="./index.html">Voice Translator</a>
+    <ul class="toplist">
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./idea.html">Idea</a></li>
+        <li><a href="./implementation.html">Implementation</a></li>
+        <li><a href="./tech.html">Techniques</a></li>
+        <li><a href="./refer.html">Reports</a></li>
+    </ul>
+    </div>
+</div>
+
+<div id="content">
+
+    <div align="center"><img src="figure.jpg" style="width:800px; height:150px;"></div>
+    <div id="header" background="figure.jpg">
+
+        <h1 id="web-title">EECS351 Voice Translator</h1>
+        <h2 id="web-subtitle"><div align="center">GROUP HISS PRESENT</div></h2>
+
+    </div>
+
+    <div id="sidebar1">
+        <h3>Team Member:</h3>
+        <span class="box">
+        <div id="sideindent">Ian Calloway </div>
+        <div id="sideindent">Heming Han </div>
+        <div id="sideindent">Seth Raker </div>
+        <div id="sideindent">Sam Tenka </div>
+        </span>   
+    </div>
+
+    <div id="sidebar2">
+
+        <h3>Contact us:</h3>
+        <span class="box">
+        <div id="sideindent">iccallow@umich.edu </div>
+        <div id="sideindent">hanhm@umich.edu </div>
+        <div id="sideindent">sraker@umich.edu </div>
+        <div id="sideindent">samtenka@umich.edu </div>    
+        </span>
+        <h3>Related Links:</h3>
+        <span class="box">
+        <a href="https://github.com/samueltenka/voice351"> Our Github </a></br>
+        <a href="http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/"> MFCC Tutorial </a>
+        </span>
+    </div>
+
+    <div id="main">
+        <h2>Techniques</h2>
+        <p>In Class DSP Tools:</p>
+        <p>For our project we are using low-pass filters, frequency domain analysis, and spectrograms. Low-pass filters are used for our segmenter. We also use 
+        FFT/DCT to check the frequency characteristic of audio and carry out some transformation based on our observation. Spectrograms are used to evaluate our 
+        result. </p>
+ 
+        <p>Out of Class DSP Tools:</p>
+        <p>We also use cepstral analysis and machine learning as tools to implement our project. Cepstral transform is digitalize the characteristic drawn from the audio. Use cepstral coefficients, we can train our model to analyze sound, as well as inverse the cesptral process to generate the sound. Second one, machine learning tools are essential to our project. Using neural network model, we can finally compose our system.</p>
+
+    </div>
+
+<!-- End #content -->
+
+<footer align="center">
+<span class="box-2">
+    <p>-----------------------------------------------------------------------------------------------------------------------------</p>
+    <p>Posted by: Group Hiss: Ian Calloway, Heming Han, Seth Raker and Samuel Tenka @ umich</p>
+    <p>Image from: <a href="https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwj-tuePxevQAhXLPCYKHYlMCZ4QjRwIBw&url=http%3A%2F%2Fcodefactoryglobal.com%2Fspeech-technology%2Fvoice-licensing%2F&psig=AFQjCNG6HeDcK24JMbjkzw5lsJwqALsQTQ&ust=1481525069854694"> http://codefactoryglobal.com/speech-technology/voice-licensing/ </a></p>
+</span>
+</footer>
+
+</div>
+</body></html>

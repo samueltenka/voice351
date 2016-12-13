@@ -1,0 +1,166 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><title>EECS351 Voice Translator</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="hstyle.css" />
+
+     <style type="text/css">
+    .collapseblock {display:none}
+    .expandblock {display:inline}
+    </style>
+
+    <script type="text/Javascript"> 
+    function toggleblocks (postid) {
+        var whichpost = document.getElementById(postid);
+        if (whichpost.className=="expandblock") {
+            whichpost.className="collapseblock";
+        } else {
+            whichpost.className="expandblock";
+        }
+    }
+    </script>
+
+
+
+  <!--above header-->
+</head>
+
+<body>
+
+<div class="topbar">
+    <div class="topbody">
+    <a class="title" href="./index.html">Voice Translator</a>
+    <ul class="toplist">
+        <li><a href="./index.html">Home</a></li>
+        <li><a href="./idea.html">Idea</a></li>
+        <li><a href="./implementation.html">Implementation</a></li>
+        <li><a href="./tech.html">Techniques</a></li>
+        <li><a href="./refer.html">Reports</a></li>
+    </ul>
+    </div>
+</div>
+
+<div id="content">
+
+    <div align="center"><img src="figure.jpg" style="width:800px; height:150px;"></div>
+    <div id="header" background="figure.jpg">
+
+        <h1 id="web-title">EECS351 Voice Translator</h1>
+        <h2 id="web-subtitle"><div align="center">GROUP HISS PRESENT</div></h2>
+
+    </div>
+
+    <div id="sidebar1">
+
+        <h3>Team Member:</h3>
+        <span class="box">
+        <div id="sideindent">Ian Calloway </div>
+        <div id="sideindent">Heming Han </div>
+        <div id="sideindent">Seth Raker </div>
+        <div id="sideindent">Sam Tenka </div>
+        </span>   
+    </div>
+
+    <div id="sidebar2">
+
+        <h3>Contact us:</h3>
+        <span class="box">
+        <div id="sideindent">iccallow@umich.edu </div>
+        <div id="sideindent">hanhm@umich.edu </div>
+        <div id="sideindent">sraker@umich.edu </div>
+        <div id="sideindent">samtenka@umich.edu </div>    
+        </span>
+        <h3>Related Links:</h3>
+        <span class="box">
+        <a href="https://github.com/samueltenka/voice351"> Our Github </a></br>
+        <a href="http://practicalcryptography.com/miscellaneous/machine-learning/guide-mel-frequency-cepstral-coefficients-mfccs/"> MFCC Tutorial </a>
+        </span>
+    </div>
+
+    <div id="main">
+        <h2>Implementation & Demonstration</h2>
+            <h3 text-align="center">Working Principle</h3>
+                <h4>Segmenters:</h4>
+                    <p>Method we use to segment the audio is to build boundaries by looking at the amplitude.
+                    We apply a linear gaussian low-pass filter. Our method selects the strict local minima,
+                    then use these minima as boundary of segments.</p>
+                    <img src="./imple/i1.png" style="margin-left:30px;width:500px;height:200px;"></br>
+                    <p>Once we have these segmenters work, we have segmented audio for our system to learn and 
+                    test.</p>
+                <h4>Classifiers:</h4>
+                    <p>the classifier uses a neural net to classify short (60ms) frames by their phoneme, 
+                    based on their cepstral coefficients. We use frame-phoneme data from the Buckeyes corpus. 
+                    We have explored several data-pre-processing (frame size, number of cepstral features) and 
+                    architectural choices (including combinations dropout, LSTM's, convolutional layers, 
+                    and dense layers).</p>
+                <h4>Embedders:</h4>
+
+                MFCC Embedder:
+                <p>we use MFCC to extract the acoustics characteristic. We
+                also tried to use inverse of the MFCC to synthesize audio. If we can 
+                do this with minimum loss, we then will be able to realize a very 
+                good voice translater. But the result is not recognizable. </p>
+                <a href="javascript:toggleblocks('d1');">Click here to see our demonstration</a>
+                </br></br>
+                    <div id="boxInMain">
+                    <div class="collapseblock" id="d1">
+                        <h4 align="center">Former implementation of synthesizer</br> (using inverse MFCC method)</h4>
+                        Idea: inverse every MFCC step to achieve the synthesis.</br></br>
+                        Example: 2 frames:
+                        </br><img src="./imple/1.png" align="center"></br>
+                        2 filters applied:
+                        </br><img src="./imple/2.png" align="center" style="width:460px;height:233px;"></br>
+                        4 result coefficients:
+                        </br><img src="./imple/3.png" align="center" style="width:460px;height:233px;"></br>
+                        Recover (find the location of peak, “guess” the value in the neighborhood):
+                        </br><img src="./imple/4.png" align="center" style="width:460px;height:233px;"></br>
+                        Final:
+                        </br><img src="./imple/5.png" align="center"></br>
+
+                        Wave form & Spectrogram (upper one input figure, lower one result figure):</br>
+                        <img src="./imple/f1-1.jpg" style="width:500px;height:233px;"></br>
+                        <img src="./imple/f1-2.jpg" style="width:500px;height:233px;"></br></br>
+                        Audio</br>
+                        <a href="./imple/english.wav">Input Audio</a></br>
+                        <a href="./imple/result.wav">Output Audio</a></br>
+                    </div>
+                    </div>
+
+                <h4>Concatenator:</h4>
+                <p>How to concatenate phonemes into a sentence? The most direct way is to concatenate the phonemes together. Though seems very simple, it's hard 
+                to generate recognizable audio. After a lot of experiments, we find some method to generate an audio by simply looking up the dictionary and 
+                concatenate the phonemes. To increase the consistency of the phonemes, we choose to not only save a single phoneme, but also save phonemes 
+                before and after as the keys in dictionary. Following is the working principle.</p>
+                <img src="./imple/i2.png" style="width:560px;height:300px;"></br></br>
+                <a href="javascript:toggleblocks('d2');">Click here to see our demonstration</a>
+                </br></br>
+                    <div id="boxInMain">
+                    <div class="collapseblock" id="d2">
+                    
+                    </div>
+                    </div>
+
+            <a href="javascript:toggleblocks('fa');"><h3 text-align="center">Former Attempt</h3></a>
+                <div class="collapseblock" id="fa">
+                <b>Segmenters</b>: the early version of our segmenters are calculating
+                the total energy of each frame. Whenever a frame has a very low total
+                energy, we treat it as silent, which used to divide words/phonemes.</br>
+                <a href="https://github.com/samueltenka/voice351/tree/master/sound-clips-division-ed1">
+                Click here to see our attempts in github</a>
+                </br></br>
+
+
+                </div>
+    </div>
+
+<!-- End #content -->
+
+<footer align="center">
+<span class="box-2">
+    <p>-----------------------------------------------------------------------------------------------------------------------------</p>
+    <p>Posted by: Group Hiss: Ian Calloway, Heming Han, Seth Raker and Samuel Tenka @ umich</p>
+    <p>Image from: <a href="https://www.google.com/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwj-tuePxevQAhXLPCYKHYlMCZ4QjRwIBw&url=http%3A%2F%2Fcodefactoryglobal.com%2Fspeech-technology%2Fvoice-licensing%2F&psig=AFQjCNG6HeDcK24JMbjkzw5lsJwqALsQTQ&ust=1481525069854694"> http://codefactoryglobal.com/speech-technology/voice-licensing/ </a></p>
+</span>
+</footer>
+
+</div>
+</body></html>
